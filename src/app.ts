@@ -22,8 +22,12 @@ app.use((_req, _res, next) => {
 });
 
 // error handler
-app.use((_err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  // @TODO: Global error handler
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  // @NOTE: Global error handler
+  if (err instanceof createError.HttpError) {
+    return res.status(err.statusCode).send({ error: err.message });
+  }
+
   return res.status(500).send({ error: "Internal server error" });
 });
 
