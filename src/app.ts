@@ -3,7 +3,7 @@ import createError from "http-errors";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 
-import routers from "./endpoints";
+import routers from "./routers";
 import { expressLogger } from "./utils/logger";
 import { authorization } from "./middlewares/authorization";
 
@@ -17,6 +17,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // authentication middleware
 app.use(authorization);
+
+// health check
+app.get("/", (_req: Request, res: Response) => {
+  return res.status(200).send({ status: "UP" });
+});
+
 // all routes
 app.use("/", routers);
 
