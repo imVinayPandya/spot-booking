@@ -1,8 +1,8 @@
-import express from "express";
+import Router from "express-promise-router";
 
 import bookingRouter from "./booking";
 
-const router = express.Router();
+const router = Router();
 
 router.use("/bookings", bookingRouter);
 

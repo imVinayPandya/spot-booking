@@ -1,25 +1,19 @@
-import express from "express";
+import Router from "express-promise-router";
 
-import { BookingController } from "../controllers/BookingController";
-import { BookingInteractor } from "../interactors/bookingInteractor";
-import { BookingRepository } from "../repositories/bookingRepositories";
+import bookingContainer from "../containers/bookingContainer";
 
-const router = express.Router();
+const router = Router();
 
-const bookingRepository = new BookingRepository();
-const bookingInteractor = new BookingInteractor(bookingRepository);
-const bookingController = new BookingController(bookingInteractor);
-
-// `/bookings` endpoint
-router.get("/", bookingController.onGetBooking.bind(bookingController));
-router.post("/", bookingController.onCreateBooking.bind(bookingController));
+// `/bookings` endpoints
+router.get("/", bookingContainer.onGetBooking.bind(bookingContainer));
+router.post("/", bookingContainer.onCreateBooking.bind(bookingContainer));
 router.put(
   "/:bookingId",
-  bookingController.onUpdateBooking.bind(bookingController)
+  bookingContainer.onUpdateBooking.bind(bookingContainer)
 );
 router.delete(
   "/:bookingId",
-  bookingController.onDeleteBooking.bind(bookingController)
+  bookingContainer.onDeleteBooking.bind(bookingContainer)
 );
 
 export default router;

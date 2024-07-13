@@ -1,11 +1,17 @@
 import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
 
 import { IBookingInteractor } from "../typings/Booking";
+import { INTERFACE_TYPE } from "../utils/constants";
 
+@injectable()
 export class BookingController {
   private bookingInteractor: IBookingInteractor;
 
-  constructor(bookingInteractor: IBookingInteractor) {
+  constructor(
+    @inject(INTERFACE_TYPE.BookingInteractor)
+    bookingInteractor: IBookingInteractor
+  ) {
     this.bookingInteractor = bookingInteractor;
   }
 

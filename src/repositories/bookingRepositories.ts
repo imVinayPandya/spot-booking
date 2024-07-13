@@ -2,7 +2,9 @@ import { Pool } from "pg";
 
 import { pgClient } from "../db/dbConnector";
 import { IBooking, IBookingRepository } from "../typings/Booking";
+import { injectable } from "inversify";
 
+@injectable()
 export class BookingRepository implements IBookingRepository {
   private dbClient: Pool;
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import "reflect-metadata";
 import dotenv from "dotenv";
 dotenv.config();
 

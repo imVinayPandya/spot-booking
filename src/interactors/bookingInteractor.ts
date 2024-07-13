@@ -1,13 +1,19 @@
+import { inject, injectable } from "inversify";
 import {
   IBooking,
   IBookingInteractor,
   IBookingRepository,
 } from "../typings/Booking";
+import { INTERFACE_TYPE } from "../utils/constants";
 
+@injectable()
 export class BookingInteractor implements IBookingInteractor {
   private bookingRepository: IBookingRepository;
 
-  constructor(bookingRepository: IBookingRepository) {
+  constructor(
+    @inject(INTERFACE_TYPE.BookingRepository)
+    bookingRepository: IBookingRepository
+  ) {
     this.bookingRepository = bookingRepository;
   }
 
