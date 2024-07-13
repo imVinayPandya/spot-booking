@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from "express";
 
 import routers from "./endpoints";
 import { expressLogger } from "./utils/logger";
+import { authorization } from "./middlewares/authorization";
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.use(expressLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// authentication middleware
+app.use(authorization);
 // all routes
 app.use("/", routers);
 
