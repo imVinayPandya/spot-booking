@@ -1,9 +1,9 @@
-interface IParkingSpot {
+export interface IParkingSpot {
   id: string;
   name: string;
 }
 
-interface IParkingSpotInteractor {
+export interface IParkingSpotInteractor {
   createParkingSpot(parkingSpot: IParkingSpot): Promise<IParkingSpot>;
   getParkingSpot(id: string): Promise<IParkingSpot>;
   updateParkingSpot(

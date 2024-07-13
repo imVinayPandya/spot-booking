@@ -1,4 +1,4 @@
-interface IBooking {
+export interface IBooking {
   id: string;
   createdBy: string;
   startDateTime: Date;
@@ -8,10 +8,24 @@ interface IBooking {
   updatedAt: Date;
 }
 
-interface IBookingInteractor {
+export interface IBookingInteractor {
   createBooking(booking: IBooking): Promise<IBooking>;
   getBooking(id: string): Promise<IBooking>;
   updateBooking(id: string, booking: IBooking): Promise<IBooking>;
-  deleteBooking(id: string): Promise<IBooking>;
-  getAllBookings(createdBy: string): Promise<IBooking[]>;
+  deleteBooking(id: string): Promise<boolean>;
+  getAllBookings(offset: number, limit: number): Promise<IBooking[]>;
+  getAllBookings(
+    offset: number,
+    limit: number,
+    createdBy: string
+  ): Promise<IBooking[]>;
+}
+
+export interface IBookingRepository {
+  create(booking: IBooking): Promise<IBooking>;
+  getById(id: string): Promise<IBooking>;
+  update(id: string, booking: IBooking): Promise<IBooking>;
+  delete(id: string): Promise<boolean>;
+  getAll(offset: number, limit: number): Promise<IBooking[]>;
+  getAll(offset: number, limit: number, createdBy: string): Promise<IBooking[]>;
 }

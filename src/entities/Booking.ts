@@ -1,3 +1,5 @@
+import { IBooking } from "../typings/Booking";
+
 /**
  * Booking entity class
  */

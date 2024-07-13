@@ -1,3 +1,5 @@
+import { IUser } from "../typings/User";
+
 /**
  * User entity class
  */

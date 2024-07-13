@@ -1,17 +1,64 @@
+import {
+  IBooking,
+  IBookingInteractor,
+  IBookingRepository,
+} from "../typings/Booking";
+
 export class BookingInteractor implements IBookingInteractor {
-  createBooking(booking: IBooking): Promise<IBooking> {
-    throw new Error("Method not implemented.");
+  private bookingRepository: IBookingRepository;
+
+  constructor(bookingRepository: IBookingRepository) {
+    this.bookingRepository = bookingRepository;
   }
-  getBooking(id: string): Promise<IBooking> {
-    throw new Error("Method not implemented.");
+
+  async createBooking(booking: IBooking): Promise<IBooking> {
+    return this.bookingRepository.create(booking);
   }
-  updateBooking(id: string, booking: IBooking): Promise<IBooking> {
-    throw new Error("Method not implemented.");
+  async getBooking(id: string): Promise<IBooking> {
+    return this.bookingRepository.getById(id);
   }
-  deleteBooking(id: string): Promise<IBooking> {
-    throw new Error("Method not implemented.");
+  async updateBooking(id: string, booking: IBooking): Promise<IBooking> {
+    return this.bookingRepository.update(id, booking);
   }
-  getAllBookings(createdBy: string): Promise<IBooking[]> {
-    throw new Error("Method not implemented.");
+  async deleteBooking(id: string): Promise<boolean> {
+    return this.bookingRepository.delete(id);
+  }
+
+  // getAllBookings Overload signatures
+  getAllBookings(offset: number, limit: number): Promise<IBooking[]>;
+  getAllBookings(
+    offset: number,
+    limit: number,
+    createdBy: string
+  ): Promise<IBooking[]>;
+
+  // getAllBookings implementation
+  async getAllBookings(
+    offset: number,
+    limit: number,
+    createdBy?: string
+  ): Promise<IBooking[]> {
+    if (createdBy) {
+      // Logic to get all bookings by a specific user
+      return this.getBookingsByCreatedByUser(offset, limit, createdBy);
+    } else {
+      // Logic to get all bookings
+      return this.getAllBookingsFromDb(offset, limit);
+    }
+  }
+
+  private async getBookingsByCreatedByUser(
+    offset: number,
+    limit: number,
+    createdBy: string
+  ): Promise<IBooking[]> {
+    return this.bookingRepository.getAll(offset, limit, createdBy);
+  }
+
+  private async getAllBookingsFromDb(
+    offset: number,
+    limit: number
+  ): Promise<IBooking[]> {
+    return this.bookingRepository.getAll(offset, limit);
   }
 }
