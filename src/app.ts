@@ -4,7 +4,7 @@ import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 
 import routers from "./routers";
-import { expressLogger } from "./utils/logger";
+import logger, { expressLogger } from "./utils/logger";
 import { authorization } from "./middlewares/authorization";
 
 const app = express();
@@ -34,6 +34,7 @@ app.use((_req, _res, next) => {
 // error handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   // @NOTE: Global error handler
+  logger.error("", err);
   if (err instanceof createError.HttpError) {
     return res.status(err.statusCode).send({ error: err.message });
   }

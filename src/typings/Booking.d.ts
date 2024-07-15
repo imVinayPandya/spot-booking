@@ -10,8 +10,8 @@ export interface IBooking {
 
 export interface IBookingInteractor {
   createBooking(booking: IBooking): Promise<IBooking>;
-  getBooking(id: string): Promise<IBooking>;
-  updateBooking(id: string, booking: IBooking): Promise<IBooking>;
+  getBooking(id: string): Promise<IBooking | null>;
+  updateBooking(id: string, booking: Partial<IBooking>): Promise<IBooking>;
   deleteBooking(id: string): Promise<boolean>;
   getAllBookings(offset: number, limit: number): Promise<IBooking[]>;
   getAllBookings(
@@ -23,8 +23,8 @@ export interface IBookingInteractor {
 
 export interface IBookingRepository {
   create(booking: IBooking): Promise<IBooking>;
-  getById(id: string): Promise<IBooking>;
-  update(id: string, booking: IBooking): Promise<IBooking>;
+  getById(id: string): Promise<IBooking | null>;
+  update(id: string, booking: Partial<IBooking>): Promise<IBooking>;
   delete(id: string): Promise<boolean>;
   getAll(offset: number, limit: number): Promise<IBooking[]>;
   getAll(offset: number, limit: number, createdBy: string): Promise<IBooking[]>;

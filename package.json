@@ -7,12 +7,14 @@
     "tsc": "tsc",
     "build": "rm built/**/*; npm run tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "start": "node built/index.js"
+    "start": "node built/index.js",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.16.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -21,7 +23,7 @@
     "inversify": "^6.0.2",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
-    "ts-node": "^10.9.2",
+    "ts-case-convert": "^2.0.7",
     "ts-node-dev": "^2.0.0",
     "winston": "^3.13.1"
   },
@@ -31,6 +33,11 @@
     "@types/node": "^20.14.10",
     "@types/pg": "^8.11.6",
     "nodemon": "^3.1.4",
+    "prisma": "^5.16.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

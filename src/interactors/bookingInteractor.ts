@@ -20,10 +20,13 @@ export class BookingInteractor implements IBookingInteractor {
   async createBooking(booking: IBooking): Promise<IBooking> {
     return this.bookingRepository.create(booking);
   }
-  async getBooking(id: string): Promise<IBooking> {
+  async getBooking(id: string): Promise<IBooking | null> {
     return this.bookingRepository.getById(id);
   }
-  async updateBooking(id: string, booking: IBooking): Promise<IBooking> {
+  async updateBooking(
+    id: string,
+    booking: Partial<IBooking>
+  ): Promise<IBooking> {
     return this.bookingRepository.update(id, booking);
   }
   async deleteBooking(id: string): Promise<boolean> {

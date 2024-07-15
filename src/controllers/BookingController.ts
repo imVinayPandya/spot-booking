@@ -37,7 +37,7 @@ export class BookingController {
   }
 
   async onUpdateBooking(req: Request, res: Response) {
-    const bookingId = req.params.bookingId;
+    const bookingId = req.params.bookingId as string;
     const booking = req.body;
 
     const updatedBooking = await this.bookingInteractor.updateBooking(
@@ -49,7 +49,7 @@ export class BookingController {
   }
 
   async onDeleteBooking(req: Request, res: Response) {
-    const bookingId = req.params.bookingId;
+    const bookingId = req.params.bookingId as string;
 
     await this.bookingInteractor.deleteBooking(bookingId);
 

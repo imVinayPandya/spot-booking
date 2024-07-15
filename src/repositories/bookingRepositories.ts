@@ -1,40 +1,63 @@
-import { Pool } from "pg";
-
-import { pgClient } from "../db/dbConnector";
-import { IBooking, IBookingRepository } from "../typings/Booking";
+import { PrismaClient } from "@prisma/client";
 import { injectable } from "inversify";
+import { objectToSnake, objectToCamel } from "ts-case-convert";
+
+import { IBooking, IBookingRepository } from "../typings/Booking";
 
 @injectable()
 export class BookingRepository implements IBookingRepository {
-  private dbClient: Pool;
+  private dbClient: PrismaClient;
 
   constructor() {
-    this.dbClient = pgClient();
+    this.dbClient = new PrismaClient();
   }
 
-  create(booking: IBooking): Promise<IBooking> {
-    throw new Error("Method not implemented.");
+  async create(booking: IBooking): Promise<IBooking> {
+    // @TODO: add validation for existing booking for same date and time for same parking spot
+    const data = await this.dbClient.bookings.create({
+      data: objectToSnake(booking),
+    });
+    return objectToCamel(data);
   }
-  async getById(id: string): Promise<IBooking> {
-    const data = await this.dbClient.query(
-      "SELECT * FROM bookings WHERE id = $1",
-      [id]
-    );
 
-    return data.rows[0];
+  async getById(id: string): Promise<IBooking | null> {
+    const data = await this.dbClient.bookings.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return data ? objectToCamel(data) : data;
   }
-  update(id: string, booking: IBooking): Promise<IBooking> {
-    throw new Error("Method not implemented.");
+
+  // @TODO: allow Partial<IBooking> to do a patch update
+  async update(id: string, booking: Partial<IBooking>): Promise<IBooking> {
+    const data = await this.dbClient.bookings.update({
+      where: {
+        id,
+      },
+      data: objectToSnake(booking),
+    });
+
+    return objectToCamel(data);
   }
-  delete(id: string): Promise<boolean> {
-    throw new Error("Method not implemented.");
+
+  async delete(id: string): Promise<boolean> {
+    const data = await this.dbClient.bookings.delete({
+      where: {
+        id,
+      },
+    });
+
+    return !!data;
   }
+
   // getAllBookings Overload signatures
   getAll(offset: number, limit: number): Promise<IBooking[]>;
   getAll(offset: number, limit: number, createdBy: string): Promise<IBooking[]>;
 
   // getAllBookings implementation
-  getAll(
+  async getAll(
     offset: number,
     limit: number,
     createdBy?: string
@@ -51,12 +74,26 @@ export class BookingRepository implements IBookingRepository {
     limit: number,
     createdBy: string
   ): Promise<IBooking[]> {
-    throw new Error("Method not implemented.");
+    const data = await this.dbClient.bookings.findMany({
+      where: {
+        created_by: createdBy,
+      },
+      skip: offset,
+      take: limit,
+    });
+
+    return objectToCamel(data);
   }
+
   private async getAllBookingsFromDb(
     offset: number,
     limit: number
   ): Promise<IBooking[]> {
-    throw new Error("Method not implemented.");
+    const data = await this.dbClient.bookings.findMany({
+      skip: offset,
+      take: limit,
+    });
+
+    return objectToCamel(data);
   }
 }
