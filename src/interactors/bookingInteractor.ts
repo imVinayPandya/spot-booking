@@ -1,4 +1,6 @@
 import { inject, injectable } from "inversify";
+import createError from "http-errors";
+
 import {
   IBooking,
   IBookingInteractor,
@@ -18,17 +20,33 @@ export class BookingInteractor implements IBookingInteractor {
   }
 
   async createBooking(booking: IBooking): Promise<IBooking> {
+    // @TODO: add test case for this scenario
+    const existingBooking =
+      await this.bookingRepository.checkBookingAvailability(
+        booking.parkingSpot,
+        booking.startDateTime,
+        booking.endDateTime
+      );
+    if (existingBooking) {
+      throw createError(
+        409,
+        "Spot is already booked for the given Date and Time"
+      );
+    }
     return this.bookingRepository.create(booking);
   }
+
   async getBooking(id: string): Promise<IBooking | null> {
     return this.bookingRepository.getById(id);
   }
+
   async updateBooking(
     id: string,
     booking: Partial<IBooking>
   ): Promise<IBooking> {
     return this.bookingRepository.update(id, booking);
   }
+
   async deleteBooking(id: string): Promise<boolean> {
     return this.bookingRepository.delete(id);
   }

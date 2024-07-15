@@ -13,7 +13,6 @@ export class BookingRepository implements IBookingRepository {
   }
 
   async create(booking: IBooking): Promise<IBooking> {
-    // @TODO: add validation for existing booking for same date and time for same parking spot
     const data = await this.dbClient.bookings.create({
       data: objectToSnake(booking),
     });
@@ -68,6 +67,34 @@ export class BookingRepository implements IBookingRepository {
       return this.getAllBookingsFromDb(offset, limit);
     }
   }
+
+  async checkBookingAvailability(
+    parkingSpotId: string,
+    startDateTime: Date,
+    endDateTime: Date
+  ): Promise<IBooking | null> {
+    const data = await this.dbClient.bookings.findFirst({
+      where: {
+        parking_spot: parkingSpotId,
+        NOT: [
+          {
+            start_date_time: {
+              gte: endDateTime,
+            },
+          },
+          {
+            end_date_time: {
+              lte: startDateTime,
+            },
+          },
+        ],
+      },
+    });
+
+    return data ? objectToCamel(data) : data;
+  }
+
+  // ---------- Private functions ----------
 
   private async getBookingsByCreatedByUser(
     offset: number,

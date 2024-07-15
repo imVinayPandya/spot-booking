@@ -28,4 +28,9 @@ export interface IBookingRepository {
   delete(id: string): Promise<boolean>;
   getAll(offset: number, limit: number): Promise<IBooking[]>;
   getAll(offset: number, limit: number, createdBy: string): Promise<IBooking[]>;
+  checkBookingAvailability(
+    parkingSpotId: string,
+    startDateTime: Date,
+    endDateTime: Date
+  ): Promise<IBooking | null>;
 }
