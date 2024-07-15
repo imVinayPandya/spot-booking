@@ -2,7 +2,7 @@ import { Container } from "inversify";
 
 import { INTERFACE_TYPE } from "../utils/constants";
 import { IBookingInteractor, IBookingRepository } from "../typings/Booking";
-import { BookingRepository } from "../repositories/bookingRepositories";
+import { BookingRepository } from "../repositories/bookingRepository";
 import { BookingInteractor } from "../interactors/bookingInteractor";
 import { BookingController } from "../controllers/BookingController";
 

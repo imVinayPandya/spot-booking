@@ -68,6 +68,7 @@ export class BookingRepository implements IBookingRepository {
     }
   }
 
+  // Check booking spot availability
   async checkBookingAvailability(
     parkingSpotId: string,
     startDateTime: Date,

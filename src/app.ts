@@ -5,7 +5,7 @@ import express, { NextFunction, Request, Response } from "express";
 
 import routers from "./routers";
 import logger, { expressLogger } from "./utils/logger";
-import { authorization } from "./middlewares/authorization";
+import { authentication } from "./middlewares/authentication";
 
 const app = express();
 
@@ -15,13 +15,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// authentication middleware
-app.use(authorization);
-
 // health check
 app.get("/", (_req: Request, res: Response) => {
   return res.status(200).send({ status: "UP" });
 });
+
+// authentication
+app.use(authentication);
 
 // all routes
 app.use("/", routers);

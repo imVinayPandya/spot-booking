@@ -9,7 +9,7 @@ export class User implements Readonly<IUser> {
     public firstName: string,
     public lastName: string,
     public email: string,
-    public role: string,
+    public role: "admin" | "standard" | string,
     public token: string
   ) {}
 }

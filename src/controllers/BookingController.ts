@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
+import createError from "http-errors";
 
 import { IBookingInteractor } from "../typings/Booking";
 import { INTERFACE_TYPE } from "../utils/constants";
@@ -16,8 +17,20 @@ export class BookingController {
   }
 
   async onCreateBooking(req: Request, res: Response) {
+    const requestingUser = req?.user;
     // @TODO: add zod validation
-    const booking = req.body;
+    const { forUserId, ...booking } = req.body;
+
+    // admin can create booking for other users
+    if (requestingUser?.role === "admin" && forUserId) {
+      booking.createdBy = forUserId;
+    } else if (requestingUser?.role === "standard" && forUserId) {
+      // standard user cannot create booking for other users
+      throw createError(403, "You cannot create booking for other users");
+    } else {
+      // admin and standard user can create booking for themselves
+      booking.createdBy = requestingUser?.id;
+    }
 
     const createdBooking = await this.bookingInteractor.createBooking(booking);
 
