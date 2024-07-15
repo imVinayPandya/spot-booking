@@ -42,22 +42,19 @@ export class BookingInteractor implements IBookingInteractor {
 
   async updateBooking(
     id: string,
-    booking: Partial<IBooking>
+    booking: Partial<IBooking>,
+    createdBy?: string
   ): Promise<IBooking> {
-    return this.bookingRepository.update(id, booking);
+    // @TODO: check availability of the booking
+    if (createdBy) {
+      return this.bookingRepository.updateByOwner(id, booking, createdBy);
+    }
+    return this.bookingRepository.updateById(id, booking);
   }
 
   async deleteBooking(id: string): Promise<boolean> {
     return this.bookingRepository.delete(id);
   }
-
-  // getAllBookings Overload signatures
-  getAllBookings(offset: number, limit: number): Promise<IBooking[]>;
-  getAllBookings(
-    offset: number,
-    limit: number,
-    createdBy: string
-  ): Promise<IBooking[]>;
 
   // getAllBookings implementation
   async getAllBookings(
@@ -67,25 +64,13 @@ export class BookingInteractor implements IBookingInteractor {
   ): Promise<IBooking[]> {
     if (createdBy) {
       // Logic to get all bookings by a specific user
-      return this.getBookingsByCreatedByUser(offset, limit, createdBy);
-    } else {
-      // Logic to get all bookings
-      return this.getAllBookingsFromDb(offset, limit);
+      return this.bookingRepository.getBookingsByOwner(
+        offset,
+        limit,
+        createdBy
+      );
     }
-  }
-
-  private async getBookingsByCreatedByUser(
-    offset: number,
-    limit: number,
-    createdBy: string
-  ): Promise<IBooking[]> {
-    return this.bookingRepository.getAll(offset, limit, createdBy);
-  }
-
-  private async getAllBookingsFromDb(
-    offset: number,
-    limit: number
-  ): Promise<IBooking[]> {
+    // Logic to get all bookings
     return this.bookingRepository.getAll(offset, limit);
   }
 }

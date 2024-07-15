@@ -1,9 +1,16 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import createError from "http-errors";
 
 import { IBookingInteractor } from "../typings/Booking";
 import { INTERFACE_TYPE } from "../utils/constants";
+import {
+  createBookingSchema,
+  cuidSchema,
+  offsetLimitSchema,
+  updateBookingSchema,
+} from "../validations";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 @injectable()
 export class BookingController {
@@ -17,8 +24,13 @@ export class BookingController {
   }
 
   async onCreateBooking(req: Request, res: Response) {
+    const reqBody = createBookingSchema.parse(req.body);
+
+    if (!reqBody) {
+      throw createError(400);
+    }
+
     const requestingUser = req?.user;
-    // @TODO: add zod validation
     const { forUserId, ...booking } = req.body;
 
     // admin can create booking for other users
@@ -38,31 +50,54 @@ export class BookingController {
   }
 
   async onGetBooking(req: Request, res: Response) {
-    // @TODO: get booking by id or get all bookings for admin user
-    // const requestingUser = req.user;
-    const { offset = 0, limit = 10 } = req.query;
+    const requestingUser = req.user;
+    const reqQuery = offsetLimitSchema.parse(req.query);
+    const { offset = 0, limit = 10 } = reqQuery;
+
+    const createdById =
+      requestingUser?.role === "admin" ? undefined : requestingUser?.id;
+
     const booking = await this.bookingInteractor.getAllBookings(
-      parseInt(offset as string),
-      parseInt(limit as string)
+      offset,
+      limit,
+      createdById
     );
 
     return res.status(200).send(booking);
   }
 
-  async onUpdateBooking(req: Request, res: Response) {
-    const bookingId = req.params.bookingId as string;
-    const booking = req.body;
+  async onUpdateBooking(req: Request, res: Response, next: NextFunction) {
+    const requestingUser = req.user;
+    const bookingId = cuidSchema.parse(req.params.bookingId);
+    const booking = updateBookingSchema.parse(req.body);
 
-    const updatedBooking = await this.bookingInteractor.updateBooking(
-      bookingId,
-      booking
-    );
+    if (!booking || !bookingId) {
+      throw createError(400);
+    }
 
-    return res.status(200).send(updatedBooking);
+    let createdBy = requestingUser?.id;
+    if (requestingUser?.role === "admin") {
+      createdBy = undefined;
+    }
+
+    try {
+      const updatedBooking = await this.bookingInteractor.updateBooking(
+        bookingId,
+        booking,
+        createdBy
+      );
+
+      return res.status(200).send(updatedBooking);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        return next(createError(404, "Booking not found"));
+      }
+      return next(error);
+    }
   }
 
   async onDeleteBooking(req: Request, res: Response) {
-    const bookingId = req.params.bookingId as string;
+    const bookingId = cuidSchema.parse(req.params.bookingId);
 
     await this.bookingInteractor.deleteBooking(bookingId);
 

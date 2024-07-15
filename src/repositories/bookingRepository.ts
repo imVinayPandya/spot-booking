@@ -29,11 +29,26 @@ export class BookingRepository implements IBookingRepository {
     return data ? objectToCamel(data) : data;
   }
 
-  // @TODO: allow Partial<IBooking> to do a patch update
-  async update(id: string, booking: Partial<IBooking>): Promise<IBooking> {
+  async updateById(id: string, booking: Partial<IBooking>): Promise<IBooking> {
     const data = await this.dbClient.bookings.update({
       where: {
         id,
+      },
+      data: objectToSnake(booking),
+    });
+
+    return objectToCamel(data);
+  }
+
+  async updateByOwner(
+    id: string,
+    booking: Partial<IBooking>,
+    createdBy: string
+  ): Promise<IBooking> {
+    const data = await this.dbClient.bookings.update({
+      where: {
+        id,
+        created_by: createdBy,
       },
       data: objectToSnake(booking),
     });
@@ -49,23 +64,6 @@ export class BookingRepository implements IBookingRepository {
     });
 
     return !!data;
-  }
-
-  // getAllBookings Overload signatures
-  getAll(offset: number, limit: number): Promise<IBooking[]>;
-  getAll(offset: number, limit: number, createdBy: string): Promise<IBooking[]>;
-
-  // getAllBookings implementation
-  async getAll(
-    offset: number,
-    limit: number,
-    createdBy?: string
-  ): Promise<IBooking[]> {
-    if (createdBy) {
-      return this.getBookingsByCreatedByUser(offset, limit, createdBy);
-    } else {
-      return this.getAllBookingsFromDb(offset, limit);
-    }
   }
 
   // Check booking spot availability
@@ -95,9 +93,7 @@ export class BookingRepository implements IBookingRepository {
     return data ? objectToCamel(data) : data;
   }
 
-  // ---------- Private functions ----------
-
-  private async getBookingsByCreatedByUser(
+  async getBookingsByOwner(
     offset: number,
     limit: number,
     createdBy: string
@@ -113,10 +109,7 @@ export class BookingRepository implements IBookingRepository {
     return objectToCamel(data);
   }
 
-  private async getAllBookingsFromDb(
-    offset: number,
-    limit: number
-  ): Promise<IBooking[]> {
+  async getAll(offset: number, limit: number): Promise<IBooking[]> {
     const data = await this.dbClient.bookings.findMany({
       skip: offset,
       take: limit,
