@@ -1,4 +1,4 @@
-import { IBooking } from "../typings/Booking";
+import { IBooking } from "../../../typings/Booking";
 
 /**
  * Booking entity class

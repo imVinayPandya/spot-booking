@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { injectable } from "inversify";
-import { objectToSnake, objectToCamel } from "ts-case-convert";
+import { objectToCamel } from "ts-case-convert";
 
-import { IUser, IUserRepository } from "../typings/User";
+import { IUser, IUserRepository } from "../../../typings/User";
 
 @injectable()
 export class UserRepository implements IUserRepository {

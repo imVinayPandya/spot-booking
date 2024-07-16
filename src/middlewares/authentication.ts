@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import createError from "http-errors";
 
-import { UserRepository } from "../repositories/userRepository";
+import { UserRepository } from "../core/adapters/repositories/userRepository";
 import logger from "../utils/logger";
 
 const userRepository = new UserRepository();

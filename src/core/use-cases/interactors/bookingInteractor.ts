@@ -5,8 +5,8 @@ import {
   IBooking,
   IBookingInteractor,
   IBookingRepository,
-} from "../typings/Booking";
-import { INTERFACE_TYPE } from "../utils/constants";
+} from "../../../typings/Booking";
+import { INTERFACE_TYPE } from "../../../utils/constants";
 
 @injectable()
 export class BookingInteractor implements IBookingInteractor {

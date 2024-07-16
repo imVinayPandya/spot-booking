@@ -1,4 +1,4 @@
-import { IParkingSpot } from "../typings/ParkingSpot";
+import { IParkingSpot } from "../../../typings/ParkingSpot";
 
 /**
  * Parking spot entity class

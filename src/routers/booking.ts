@@ -1,6 +1,6 @@
 import Router from "express-promise-router";
 
-import bookingContainer from "../containers/bookingContainer";
+import bookingContainer from "../core/adapters/containers/bookingContainer";
 
 const router = Router();
 

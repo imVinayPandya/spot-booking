@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { injectable } from "inversify";
 import { objectToSnake, objectToCamel } from "ts-case-convert";
 
-import { IBooking, IBookingRepository } from "../typings/Booking";
+import { IBooking, IBookingRepository } from "../../../typings/Booking";
 
 @injectable()
 export class BookingRepository implements IBookingRepository {

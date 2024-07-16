@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import createError from "http-errors";
 
-import { IBookingInteractor } from "../typings/Booking";
-import { INTERFACE_TYPE } from "../utils/constants";
+import { IBookingInteractor } from "../../../typings/Booking";
+import { INTERFACE_TYPE } from "../../../utils/constants";
 import {
   createBookingSchema,
   cuidSchema,
   offsetLimitSchema,
   updateBookingSchema,
-} from "../validations";
+} from "../../../validations";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 @injectable()

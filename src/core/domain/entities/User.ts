@@ -1,4 +1,4 @@
-import { IUser } from "../typings/User";
+import { IUser } from "../../../typings/User";
 
 /**
  * User entity class
