@@ -45,7 +45,39 @@ export class BookingInteractor implements IBookingInteractor {
     booking: Partial<IBooking>,
     createdBy?: string
   ): Promise<IBooking> {
-    // @TODO: check availability of the booking
+    let { startDateTime, endDateTime } = booking;
+    // TODO: check if booking.createdBy is exist in database or not
+
+    // If either startDateTime or endDateTime is missing, fetch the existing booking
+    if (!startDateTime || !endDateTime) {
+      const existingBooking = await this.bookingRepository.getById(id);
+      if (!existingBooking) {
+        throw createError(404, "Booking not found");
+      }
+      startDateTime = startDateTime || existingBooking.startDateTime;
+      endDateTime = endDateTime || existingBooking.endDateTime;
+    }
+
+    // update startDateTime and endDateTime in booking object
+    booking.startDateTime = startDateTime;
+    booking.endDateTime = endDateTime;
+
+    // If now we have both startDateTime and endDateTime, check availability
+    if (booking.parkingSpot) {
+      const isAvailable = await this.bookingRepository.checkBookingAvailability(
+        booking.parkingSpot,
+        startDateTime,
+        endDateTime
+      );
+
+      if (isAvailable) {
+        throw createError(
+          404,
+          "Spot is already booked for the given Date and Time"
+        );
+      }
+    }
+
     if (createdBy) {
       return this.bookingRepository.updateByOwner(id, booking, createdBy);
     }

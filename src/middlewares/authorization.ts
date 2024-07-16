@@ -6,6 +6,5 @@ export const authorization = (
   _res: Response,
   next: NextFunction
 ) => {
-  // @TODO: Implement your own authorization logic here
   return next();
 };

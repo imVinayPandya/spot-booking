@@ -6,7 +6,7 @@ import { IBookingInteractor } from "../../../typings/Booking";
 import { INTERFACE_TYPE } from "../../../utils/constants";
 import {
   createBookingSchema,
-  cuidSchema,
+  stringSchema,
   offsetLimitSchema,
   updateBookingSchema,
 } from "../../../validations";
@@ -68,7 +68,7 @@ export class BookingController {
 
   async onUpdateBooking(req: Request, res: Response, next: NextFunction) {
     const requestingUser = req.user;
-    const bookingId = cuidSchema.parse(req.params.bookingId);
+    const bookingId = stringSchema.parse(req.params.bookingId);
     const booking = updateBookingSchema.parse(req.body);
 
     if (!booking || !bookingId) {
@@ -97,7 +97,7 @@ export class BookingController {
   }
 
   async onDeleteBooking(req: Request, res: Response) {
-    const bookingId = cuidSchema.parse(req.params.bookingId);
+    const bookingId = stringSchema.parse(req.params.bookingId);
 
     await this.bookingInteractor.deleteBooking(bookingId);
 
