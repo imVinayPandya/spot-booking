@@ -19,7 +19,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // health check
 app.get("/", (_req: Request, res: Response) => {
-  return res.status(200).send({ status: "UP" });
+  logger.info("Health check");
+  return res.status(200).send({ message: "Server is running" });
 });
 
 // authentication
@@ -30,6 +31,7 @@ app.use("/", routers);
 
 // catch 404 and forward to error handler
 app.use((_req, _res, next) => {
+  logger.error("Requested Url Not found");
   next(createError(404));
 });
 
@@ -37,7 +39,6 @@ app.use((_req, _res, next) => {
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   // @NOTE: Global error handler
   logger.error("", err);
-  logger.error(err);
   // zod error (it should in separate file or middleware)
   if (err instanceof zod.ZodError) {
     return res.status(400).send({ error: err.issues[0].message });
