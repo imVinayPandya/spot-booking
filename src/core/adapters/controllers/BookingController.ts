@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import createError from "http-errors";
 
@@ -10,6 +10,7 @@ import {
   offsetLimitSchema,
   updateBookingSchema,
 } from "../../../validations";
+import logger from "../../../utils/logger";
 
 @injectable()
 export class BookingController {
@@ -65,7 +66,7 @@ export class BookingController {
     return res.status(200).send(booking);
   }
 
-  async onUpdateBooking(req: Request, res: Response, next: NextFunction) {
+  async onUpdateBooking(req: Request, res: Response) {
     const requestingUser = req.user;
     const bookingId = stringSchema.parse(req.params.bookingId);
     const booking = updateBookingSchema.parse(req.body);
@@ -90,6 +91,19 @@ export class BookingController {
 
   async onDeleteBooking(req: Request, res: Response) {
     const bookingId = stringSchema.parse(req.params.bookingId);
+    const requestingUser = req.user;
+
+    const existingBooking = await this.bookingInteractor.getBooking(bookingId);
+    if (!existingBooking) {
+      throw createError(404, "Booking not found");
+    }
+
+    if (
+      existingBooking.createdBy !== requestingUser?.id &&
+      requestingUser?.role !== "admin"
+    ) {
+      throw createError(403, "Unauthorized operation");
+    }
 
     await this.bookingInteractor.deleteBooking(bookingId);
 
