@@ -30,14 +30,14 @@ async function main() {
   await prisma.parking_spots.create({
     data: {
       id: "abc-1",
-      name: "table_one",
+      name: "spot_one",
     },
   });
 
   await prisma.parking_spots.create({
     data: {
       id: "abc-2",
-      name: "table_two",
+      name: "spot_two",
     },
   });
 }

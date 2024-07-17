@@ -8,9 +8,11 @@
     "build": "rm built/**/*; npm run tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node built/index.js",
-    "seed": "ts-node prisma/seed.ts",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "seed": "ts-node prisma/seed.ts",
+    "migrate": "prisma migrate dev",
+    "reset:db": "prisma migrate reset --force"
   },
   "keywords": [],
   "author": "",
