@@ -12,11 +12,13 @@
   - [Run on Production](#run-on-production)
   - [Run test](#run-test)
   - [Seed Dummy data](#seed-dummy-data)
-- [List of Test Cases](#list-of-test-cases)
+- [List of Test Cases](#-list-of-test-cases)
   - [Create Booking](#bookingcontroller-oncreatebooking)
   - [Get Booking](#bookingcontroller-ongetbooking)
   - [Update Booking](#bookingcontroller-onupdatebooking)
   - [Delete Booking](#bookingcontroller-ondeletebooking)
+
+<hr />
 
 ### 📍 About The Project
 
@@ -26,12 +28,12 @@ This repo demonstrate how you can build Parking Spot booking api using Clean Arc
 
 To get a local copy up and running, follow these simple example steps.
 
-### Prerequisites
+#### Prerequisites
 
 - Nod.js `v20.12.0`
 - docker-compose or postgresql
 
-### Setup Database & env
+#### Setup Database & env
 
 > If you have already installed Postgresql on your machine. you can create database `spot_booking` and skip this step.
 
@@ -47,7 +49,7 @@ To get a local copy up and running, follow these simple example steps.
   DATABASE_URL="postgresql://postgres:password@0.0.0.0:5432/spot_booking?schema=public"
   ```
 
-### Run project for local development
+#### Run project for local development
 
 - Install Dependencies `npm install`
 
@@ -61,7 +63,7 @@ To get a local copy up and running, follow these simple example steps.
 
 - visit http://localhost:8000
 
-### Run on Production
+#### Run on Production
 
 - `npm run build`
 
@@ -70,6 +72,8 @@ To get a local copy up and running, follow these simple example steps.
 ### Run test
 
 To run test cases `npm run test`
+
+<hr />
 
 ### Seed Dummy data
 
@@ -88,6 +92,8 @@ If you have seeded data as mentioned previously. You will have following data in
 |------------|----------|
 | abc-1 | spot_one |
 | abc-2 | spot_two |
+
+<hr />
 
 ### 🤖 List of test cases
 
