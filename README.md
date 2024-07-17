@@ -12,6 +12,11 @@
   - [Run on Production](#run-on-production)
   - [Run test](#run-test)
   - [Seed Dummy data](#seed-dummy-data)
+- [List of Test Cases](#list-of-test-cases)
+  - [Create Booking](#bookingcontroller-oncreatebooking)
+  - [Get Booking](#bookingcontroller-ongetbooking)
+  - [Update Booking](#bookingcontroller-onupdatebooking)
+  - [Delete Booking](#bookingcontroller-ondeletebooking)
 
 ### 📍 About The Project
 
@@ -83,3 +88,35 @@ If you have seeded data as mentioned previously. You will have following data in
 |------------|----------|
 | abc-1 | spot_one |
 | abc-2 | spot_two |
+
+### 🤖 List of test cases
+
+###### BookingController onCreateBooking
+
+- [x] should return 400 if request body is invalid
+- [x] should return 400 if endDateTime should be greater than startDateTime
+- [x] should return 403 if standard user tries to create booking for other users
+- [x] should return 409 if booking already exists for the given parking spot and time
+- [x] should return PrismaClientKnownRequestError if parkingSpot or forUserId is does not exist in DB (52 ms)
+- [x] should return 201 if booking is created successfully
+
+###### BookingController onGetBooking
+
+- [x] should return 200 and should do DB query with Offset=0, limit=2
+- [x] Should return 200 and return all bookings for Admin user
+- [x] Should return 200 and return bookings of standard user
+
+###### BookingController onUpdateBooking
+
+- [x] should return 409 if booking already exists for the given parking spot and time
+- [x] should return 404 if booking does not exist in DB (3 ms)
+- [x] should return 400 if request body is invalid
+- [x] should return 403 if standard user tries to update other user's booking
+- [x] should return 200 if booking is updated successfully
+
+###### BookingController onDeleteBooking
+
+- [x] should return 400 if bookingId not found in request params
+- [x] should return 404 if booking not found in database
+- [x] should return 403 if standard user tries to delete other user's booking
+- [x] should return 200 if booking is deleted successfully
