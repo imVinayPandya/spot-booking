@@ -1,10 +1,12 @@
 import path from "path";
 import createError from "http-errors";
 import cors from "cors";
+import zod, { ZodError } from "zod";
 import express, { NextFunction, Request, Response } from "express";
 
-import routers from "./endpoints";
-import { expressLogger } from "./utils/logger";
+import routers from "./routers";
+import logger, { expressLogger } from "./utils/logger";
+import { authentication } from "./middlewares/authentication";
 
 const app = express();
 
@@ -13,6 +15,15 @@ app.use(expressLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// health check
+app.get("/", (_req: Request, res: Response) => {
+  return res.status(200).send({ status: "UP" });
+});
+
+// authentication
+app.use(authentication);
+
 // all routes
 app.use("/", routers);
 
@@ -24,6 +35,12 @@ app.use((_req, _res, next) => {
 // error handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   // @NOTE: Global error handler
+  logger.error("", err);
+  // zod error (it should in separate file or middleware)
+  if (err instanceof zod.ZodError) {
+    return res.status(400).send({ error: err.issues[0].message });
+  }
+  // http or custom error
   if (err instanceof createError.HttpError) {
     return res.status(err.statusCode).send({ error: err.message });
   }

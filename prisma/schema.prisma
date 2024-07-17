@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model bookings {
+  id              String        @id @default(cuid()) @db.VarChar(255)
+  created_by      String        @db.VarChar(255)
+  created_by_id   users         @relation(fields: [created_by], references: [id])
+  start_date_time DateTime
+  end_date_time   DateTime
+  parking_spot    String        @db.VarChar(255)
+  parking_spot_id parking_spots @relation(fields: [parking_spot], references: [id])
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @default(now()) @updatedAt
+}
+
+model parking_spots {
+  id         String     @id @default(cuid()) @db.VarChar(255)
+  name       String     @db.VarChar(255)
+  bookings   bookings[] // Relation to Booking
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+}
+
+model users {
+  id         String     @id @default(cuid()) @db.VarChar(255)
+  first_name String     @db.VarChar(255)
+  last_name  String     @db.VarChar(255)
+  email      String     @db.VarChar(255)
+  role       String     @db.VarChar(255)
+  token      String     @db.VarChar(255)
+  bookings   bookings[] // Relation to Booking
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+}
