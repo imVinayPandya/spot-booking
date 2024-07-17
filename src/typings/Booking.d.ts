@@ -9,7 +9,7 @@ export interface IBooking {
 }
 
 export interface IBookingInteractor {
-  createBooking(booking: IBooking): Promise<IBooking>;
+  createBooking(booking: IBooking): Promise<IBooking | null>;
   getBooking(id: string): Promise<IBooking | null>;
   updateBooking(
     id: string,

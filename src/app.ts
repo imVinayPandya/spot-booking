@@ -1,8 +1,9 @@
 import path from "path";
 import createError from "http-errors";
 import cors from "cors";
-import zod, { ZodError } from "zod";
+import zod from "zod";
 import express, { NextFunction, Request, Response } from "express";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 import routers from "./routers";
 import logger, { expressLogger } from "./utils/logger";
@@ -18,7 +19,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // health check
 app.get("/", (_req: Request, res: Response) => {
-  return res.status(200).send({ status: "UP" });
+  logger.info("Health check");
+  return res.status(200).send({ message: "Server is running" });
 });
 
 // authentication
@@ -29,6 +31,7 @@ app.use("/", routers);
 
 // catch 404 and forward to error handler
 app.use((_req, _res, next) => {
+  logger.error("Requested Url Not found");
   next(createError(404));
 });
 
@@ -43,6 +46,14 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   // http or custom error
   if (err instanceof createError.HttpError) {
     return res.status(err.statusCode).send({ error: err.message });
+  }
+
+  // prisma error (it should in separate file or middleware)
+  if (err instanceof PrismaClientKnownRequestError) {
+    if (err.code === "P2025")
+      return res.status(404).send({ error: "Not found" });
+    if (err.code === "P2003")
+      return res.status(400).send({ error: "Bad request" });
   }
 
   return res.status(500).send({ error: "Internal server error" });
