@@ -10,7 +10,6 @@ import {
   offsetLimitSchema,
   updateBookingSchema,
 } from "../../../validations";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 @injectable()
 export class BookingController {
@@ -80,20 +79,13 @@ export class BookingController {
       createdBy = undefined;
     }
 
-    try {
-      const updatedBooking = await this.bookingInteractor.updateBooking(
-        bookingId,
-        booking,
-        createdBy
-      );
+    const updatedBooking = await this.bookingInteractor.updateBooking(
+      bookingId,
+      booking,
+      createdBy
+    );
 
-      return res.status(200).send(updatedBooking);
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        return next(createError(404, "Booking not found"));
-      }
-      return next(error);
-    }
+    return res.status(200).send(updatedBooking);
   }
 
   async onDeleteBooking(req: Request, res: Response) {

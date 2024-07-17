@@ -7,7 +7,6 @@ import {
   IBookingRepository,
 } from "../../../typings/Booking";
 import { INTERFACE_TYPE } from "../../../utils/constants";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 @injectable()
 export class BookingInteractor implements IBookingInteractor {
@@ -35,20 +34,7 @@ export class BookingInteractor implements IBookingInteractor {
       );
     }
 
-    try {
-      const result = await this.bookingRepository.create(booking);
-      return result;
-    } catch (err: any) {
-      // if parking_spot or user not found
-      if (
-        err instanceof PrismaClientKnownRequestError &&
-        err.code === "P2003"
-      ) {
-        throw createError(400);
-      }
-    }
-
-    return null;
+    return this.bookingRepository.create(booking);
   }
 
   async getBooking(id: string): Promise<IBooking | null> {

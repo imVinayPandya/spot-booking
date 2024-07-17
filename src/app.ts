@@ -1,8 +1,9 @@
 import path from "path";
 import createError from "http-errors";
 import cors from "cors";
-import zod, { ZodError } from "zod";
+import zod from "zod";
 import express, { NextFunction, Request, Response } from "express";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 import routers from "./routers";
 import logger, { expressLogger } from "./utils/logger";
@@ -36,6 +37,7 @@ app.use((_req, _res, next) => {
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   // @NOTE: Global error handler
   logger.error("", err);
+  logger.error(err);
   // zod error (it should in separate file or middleware)
   if (err instanceof zod.ZodError) {
     return res.status(400).send({ error: err.issues[0].message });
@@ -43,6 +45,14 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   // http or custom error
   if (err instanceof createError.HttpError) {
     return res.status(err.statusCode).send({ error: err.message });
+  }
+
+  // prisma error (it should in separate file or middleware)
+  if (err instanceof PrismaClientKnownRequestError) {
+    if (err.code === "P2025")
+      return res.status(404).send({ error: "Not found" });
+    if (err.code === "P2003")
+      return res.status(400).send({ error: "Bad request" });
   }
 
   return res.status(500).send({ error: "Internal server error" });
