@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Content</h1>
+  <h1>Book Parking Sport</h1>
 </div>
 
 #### Table of Contents
@@ -77,7 +77,7 @@ To run test cases `npm run test`
 
 ### Seed Dummy data
 
-If you have seeded data as mentioned previously. You will have following data in database
+- `npm run seed` to seed dummy data into database and You will have following data in your database
 
 **Users**
 
@@ -85,7 +85,6 @@ If you have seeded data as mentioned previously. You will have following data in
 | ---------- | -------- | -------- | --------- |
 | user-1     | vinay    | admin    | token-1   |
 | user-2     | shivam   | standard | token-2   |
-|            |          |          |           |
 
 **Parking Spot**
 | **spotId** | **name** |
