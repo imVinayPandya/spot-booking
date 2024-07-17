@@ -3,13 +3,14 @@ import { injectable } from "inversify";
 import { objectToCamel } from "ts-case-convert";
 
 import { IUser, IUserRepository } from "../../../typings/User";
+import prismaClient from "../../../db/dbConnector";
 
 @injectable()
 export class UserRepository implements IUserRepository {
   private dbClient: PrismaClient;
 
   constructor() {
-    this.dbClient = new PrismaClient();
+    this.dbClient = prismaClient;
   }
 
   async getUserByToken(token: string): Promise<IUser | null> {

@@ -3,13 +3,14 @@ import { injectable } from "inversify";
 import { objectToSnake, objectToCamel } from "ts-case-convert";
 
 import { IBooking, IBookingRepository } from "../../../typings/Booking";
+import prismaClient from "../../../db/dbConnector";
 
 @injectable()
 export class BookingRepository implements IBookingRepository {
   private dbClient: PrismaClient;
 
   constructor() {
-    this.dbClient = new PrismaClient();
+    this.dbClient = prismaClient;
   }
 
   async create(booking: IBooking): Promise<IBooking> {

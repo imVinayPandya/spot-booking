@@ -25,6 +25,7 @@
     "express-promise-router": "^4.1.1",
     "express-winston": "^4.2.0",
     "inversify": "^6.0.2",
+    "jest-mock-extended": "^3.0.7",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
     "ts-case-convert": "^2.0.7",

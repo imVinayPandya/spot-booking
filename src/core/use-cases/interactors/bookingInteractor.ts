@@ -7,6 +7,7 @@ import {
   IBookingRepository,
 } from "../../../typings/Booking";
 import { INTERFACE_TYPE } from "../../../utils/constants";
+import logger from "../../../utils/logger";
 
 @injectable()
 export class BookingInteractor implements IBookingInteractor {
@@ -28,6 +29,7 @@ export class BookingInteractor implements IBookingInteractor {
         booking.endDateTime
       );
     if (existingBooking) {
+      logger.error("Spot is already booked for the given Date and Time");
       throw createError(
         409,
         "Spot is already booked for the given Date and Time"
@@ -53,6 +55,7 @@ export class BookingInteractor implements IBookingInteractor {
     if (!startDateTime || !endDateTime) {
       const existingBooking = await this.bookingRepository.getById(id);
       if (!existingBooking) {
+        logger.error("Booking not found");
         throw createError(404, "Booking not found");
       }
       startDateTime = startDateTime || existingBooking.startDateTime;
@@ -72,8 +75,9 @@ export class BookingInteractor implements IBookingInteractor {
       );
 
       if (isAvailable) {
+        logger.error("Spot is already booked for the given Date and Time");
         throw createError(
-          404,
+          409,
           "Spot is already booked for the given Date and Time"
         );
       }
