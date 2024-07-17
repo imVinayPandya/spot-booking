@@ -2,6 +2,7 @@ import path from "path";
 import createError from "http-errors";
 import cors from "cors";
 import zod from "zod";
+import helmet from "helmet";
 import express, { NextFunction, Request, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
@@ -12,6 +13,7 @@ import { authentication } from "./middlewares/authentication";
 const app = express();
 
 app.use(cors());
+app.use(helmet());
 app.use(expressLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

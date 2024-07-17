@@ -17,6 +17,7 @@
   - [Get Booking](#bookingcontroller-ongetbooking)
   - [Update Booking](#bookingcontroller-onupdatebooking)
   - [Delete Booking](#bookingcontroller-ondeletebooking)
+- [Todos](#todos-things-can-be-done)
 
 <hr />
 
@@ -69,7 +70,7 @@ To get a local copy up and running, follow these simple example steps.
 
 - `npm start`
 
-### Run test
+#### Run test
 
 To run test cases `npm run test`
 
@@ -125,3 +126,17 @@ To run test cases `npm run test`
 - [x] should return 404 if booking not found in database
 - [x] should return 403 if standard user tries to delete other user's booking
 - [x] should return 200 if booking is deleted successfully
+
+<hr />
+
+### TODOs: (Things can be done)
+
+My initial goal is to keep my focus on creating api with business requirement.
+I have listed few Todo or things can be done differently
+
+- [ ] Docker for Node.js app
+- [ ] Different error handler for httpError, Database error, validation error
+- [ ] Unified response object (for error & success)
+- [ ] implement intigretion test
+- [ ] Improve folder structure
+- [ ] Api versioning
